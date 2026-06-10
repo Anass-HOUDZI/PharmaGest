@@ -4,7 +4,6 @@ PharmaGest est une application web moderne (Single Page Application - SPA) de ty
 
 <img width="1919" height="1021" alt="Capture d&#39;écran 2026-06-10 155201" src="https://github.com/user-attachments/assets/594bf2f7-6a4b-4cca-8311-551710cd1607" />
 
----
 
 <img width="1918" height="1000" alt="Capture d&#39;écran 2026-06-10 155221" src="https://github.com/user-attachments/assets/1864ad4d-3c5f-46d0-8b9d-34dd51e4be6f" />
 
