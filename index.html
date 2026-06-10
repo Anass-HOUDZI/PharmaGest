@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PharmaGest - Système de Gestion de Pharmacie</title>
+  <!-- Main Stylesheet with cache-busting version -->
+  <link rel="stylesheet" href="styles-v10.css">
+  <!-- Chart.js CDN for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- MOBILE HEADER -->
+  <header class="mobile-header">
+    <!-- Menu Toggle Button hidden to ensure no vertical menus exist -->
+    <button id="btn-mobile-menu-toggle" style="display: none;"></button>
+    <h1>PharmaGest</h1>
+    <div style="display: flex; gap: 8px;">
+      <button class="mobile-theme-toggle" id="mobile-theme-toggle-btn" title="Changer de thème">
+        <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-container">
+    
+    <!-- SIDEBAR DRAWER (HIDDEN PLACEHOLDER) -->
+    <aside class="sidebar" id="sidebar-drawer" style="display: none;">
+      <button id="btn-close-sidebar-menu" style="display: none;"></button>
+    </aside>
+
+    <!-- MAIN APP WRAPPER -->
+    <main class="main-content">
+      
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="header-left">
+          <!-- Logo relocated from sidebar -->
+          <div class="logo-container">
+            <div class="logo-text">
+              <h1>Pharma<span style="font-weight: 300; opacity: 0.9;">Gest</span></h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Horizontal Navigation relocated from sidebar -->
+        <nav class="nav-menu">
+          <li class="nav-item active" data-tab="dashboard">
+            <a href="#">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              Tableau de Bord
+            </a>
+          </li>
+          <li class="nav-item" data-tab="pos">
+            <a href="#">
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              Caisse & POS
+            </a>
+          </li>
+          <li class="nav-item" data-tab="stock">
+            <a href="#">
+              <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              Gestion des Stocks
+            </a>
+          </li>
+          <li class="nav-item" data-tab="patients">
+            <a href="#">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Patients & Dossiers
+            </a>
+          </li>
+        </nav>
+        
+        <div class="topbar-actions">
+
+          <button class="theme-toggle" id="audio-toggle-btn" title="Activer/Désactiver le son">
+            <svg viewBox="0 0 24 24" id="audio-icon"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke-width="2" stroke="currentColor" fill="none"/></svg>
+          </button>
+          
+          <button class="theme-toggle" id="theme-toggle-btn" title="Changer de thème">
+            <svg viewBox="0 0 24 24" id="theme-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          
+          <button class="notifications-btn" title="Alertes">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <div class="badge-dot" id="notif-badge"></div>
+          </button>
+
+          <!-- User profile relocated from sidebar footer -->
+          <div class="user-profile">
+            <div class="avatar">AH</div>
+            <div class="user-info">
+              <span class="user-name">Anass HOUDZI</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- VIEW: TABLEAU DE BORD (DASHBOARD) -->
+      <section class="page-view active" id="view-dashboard">
+        <!-- KPI Cards Grid -->
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h3>Chiffre d'Affaires Actuel</h3>
+              <div class="value" id="kpi-sales-today">0,00 €</div>
+              <div class="trend positive">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <span>+4.2% (hier)</span>
+              </div>
+            </div>
+            <div class="card-icon-container fuchsia">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+          </div>
+          
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h3>Ordonnances Traitées</h3>
+              <div class="value" id="kpi-prescriptions-today">0</div>
+              <div class="trend positive">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <span>+2 ord. (hier)</span>
+              </div>
+            </div>
+            <div class="card-icon-container violet">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 11v6M9 14h6"/></svg>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h3>Alertes de Rupture</h3>
+              <div class="value" id="kpi-low-stock">0</div>
+              <div class="trend negative" id="low-stock-trend-label">
+                <!-- Warn icon -->
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>Niveau d'alerte</span>
+              </div>
+            </div>
+            <div class="card-icon-container amber">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h3>Médicaments Périmés</h3>
+              <div class="value" id="kpi-expiring-soon">0</div>
+              <div class="trend neutral">
+                <span>Moins de 3 mois</span>
+              </div>
+            </div>
+            <div class="card-icon-container red">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Dashboard Body Grid (2-column layout) -->
+        <div class="dashboard-body-grid">
+          <!-- Left Main Column: Sales Line Chart & Top Selling Drugs Table -->
+          <div class="dashboard-main-col">
+            <!-- Line Chart Card -->
+            <div class="chart-card sales-chart-card">
+              <div class="section-header">
+                <h3>Ventes sur les 7 derniers jours</h3>
+              </div>
+              <div class="chart-container">
+                <canvas id="sales-chart"></canvas>
+              </div>
+            </div>
+            
+            <!-- Top Selling Drugs Table Card -->
+            <div class="chart-card top-selling-card">
+              <div class="section-header" style="margin-bottom: 12px;">
+                <h3>📈 Top des Médicaments les plus Vendus</h3>
+              </div>
+              <div style="overflow-x: auto;">
+                <table class="table-styled" style="width: 100%; font-size: 0.8rem;">
+                  <thead>
+                    <tr>
+                      <th>Nom du Médicament</th>
+                      <th>Molécule (DCI)</th>
+                      <th>Classification</th>
+                      <th>Unités Vendues</th>
+                      <th>Chiffre d'Affaires</th>
+                    </tr>
+                  </thead>
+                  <tbody id="top-selling-drugs-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Sidebar Column: Performance/Reorder, Doughnut Chart, Alerts List -->
+          <div class="dashboard-side-col">
+            <!-- Performance & Reorder Card -->
+            <div class="alerts-card performance-card">
+              <div class="section-header" style="margin-bottom: 12px;">
+                <h3>⚡ Performances & Approvisionnement</h3>
+              </div>
+              <div class="stats-indicators-list">
+                <div class="stat-indicator-item">
+                  <span class="stat-indicator-label">Panier Moyen Client :</span>
+                  <span id="stat-average-basket" class="stat-indicator-value">0,00 €</span>
+                </div>
+                <div class="stat-indicator-item">
+                  <span class="stat-indicator-label">Taux de Rupture Global :</span>
+                  <span id="stat-rupture-rate" class="stat-indicator-value danger-text">0%</span>
+                </div>
+                <button class="btn-submit" id="btn-dashboard-order-refill" style="width: 100%; padding: 12px; font-size: 0.85rem; margin-top: 8px; background: linear-gradient(135deg, var(--primary), var(--accent));">
+                  📦 Commander les Ruptures
+                </button>
+              </div>
+            </div>
+
+            <!-- Doughnut Chart Card -->
+            <div class="chart-card classification-card">
+              <div class="section-header">
+                <h3>Répartition par Classification</h3>
+              </div>
+              <div class="chart-container" style="height: 180px;">
+                <canvas id="category-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Urgent Alerts Card -->
+            <div class="alerts-card alerts-list-card">
+              <div class="section-header">
+                <h3>Alertes Urgentes</h3>
+              </div>
+              <div class="alerts-list" id="dashboard-alerts-container">
+                <!-- Rendered Dynamically -->
+                <div class="alert-item warning">
+                  <div class="alert-icon">⚠️</div>
+                  <div class="alert-info">
+                    <div class="alert-title">Aucune alerte en cours</div>
+                    <div class="alert-desc">Les stocks et les dates de péremption sont conformes.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: CAISSE & POS -->
+      <section class="page-view" id="view-pos">
+        <!-- POS Responsive Mobile Tabs Switcher -->
+        <div class="pos-mobile-tabs" id="pos-mobile-tabs-container">
+          <button class="pos-tab-btn active" data-pos-pane="left">🛒 Panier</button>
+          <button class="pos-tab-btn" data-pos-pane="right">💳 Règlement</button>
+        </div>
+
+        <div class="pos-container">
+          
+          <!-- LEFT AREA: Cart, Search, Safety check -->
+          <div class="pos-left mobile-active-pane" id="pos-left-pane">
+            <!-- Top row: Patient vitale card & Medication search card -->
+            <div class="pos-top-row">
+              <!-- Patient / Vitale Display -->
+              <div class="pos-card patient-search-panel">
+                <div class="patient-info-display">
+                  <div class="patient-avatar-large" id="pos-patient-avatar">V</div>
+                  <div class="patient-details-row">
+                    <span class="patient-name-field" id="pos-patient-name">Patient Anonyme (Vente Comptoir)</span>
+                    <span class="patient-secu-field" id="pos-patient-secu">Pas de carte vitale lue</span>
+                    <div class="patient-coverage-badges" id="pos-patient-badges" style="display: none;">
+                      <span class="badge-coverage secu" id="badge-secu-pct">Remboursement Sécu: 65%</span>
+                      <span class="badge-coverage mutuelle" id="badge-mutuelle-pct">Mutuelle active</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-vitale" id="btn-simulate-vitale">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span id="vitale-btn-text">Insérer Carte Vitale</span>
+                </button>
+              </div>
+              
+              <!-- Medication Search bar -->
+              <div class="pos-card pos-search-panel">
+                <div class="input-icon-group">
+                  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" placeholder="Rechercher un médicament par nom, DCI ou code CIP..." class="input-styled" id="pos-med-search" autocomplete="off">
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">
+                  <button class="btn-scan-sim" id="btn-scan-barcode" style="flex-grow: 1;">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="5" x2="3" y2="19"/><line x1="8" y1="5" x2="8" y2="19"/><line x1="12" y1="5" x2="12" y2="19"/><line x1="17" y1="5" x2="17" y2="19"/><line x1="21" y1="5" x2="21" y2="19"/></svg>
+                    Simuler Scan (CIP)
+                  </button>
+                  <button class="btn-scan-sim" id="btn-scan-prescription" style="flex-grow: 1; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    <svg viewBox="0 0 24 24" style="stroke: currentColor;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    📄 Scanner Ordonnance
+                  </button>
+                </div>
+                
+                <!-- Search Results Overlay Dropdown -->
+                <div class="search-results-dropdown" id="pos-search-results-dropdown">
+                  <!-- JS populated -->
+                </div>
+              </div>
+            </div>
+            
+            <!-- Drug Safety Alert panel -->
+            <div class="prescription-safety-card" id="safety-alert-card">
+              <div class="safety-icon">
+                <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="safety-details">
+                <h4 id="safety-alert-title">Alerte de Sécurité Patient</h4>
+                <p id="safety-alert-desc">Description de la contre-indication ou du risque d'interaction.</p>
+              </div>
+            </div>
+            
+            <!-- POS Cart Table -->
+            <div class="cart-items-wrapper">
+              <table class="table-styled" id="pos-cart-table">
+                <thead>
+                  <tr>
+                    <th>Désignation (Médicament)</th>
+                    <th class="col-qty">Qté</th>
+                    <th>Prix Unit.</th>
+                    <th>Taux TVA</th>
+                    <th class="col-price">Total</th>
+                    <th class="col-action"></th>
+                  </tr>
+                </thead>
+                <tbody id="pos-cart-items-body">
+                  <!-- Dynamic Cart Items -->
+                  <tr class="empty-cart-row">
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                      Le panier est vide. Recherchez un médicament ou insérez une Carte Vitale pour débuter la délivrance.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- RIGHT AREA: Payment & Calculations -->
+          <div class="pos-right" id="pos-right-pane">
+            <div class="checkout-header">
+              <h3>Validation de la Vente</h3>
+              <span class="cart-count" id="cart-item-count-badge">0 Article</span>
+            </div>
+            
+            <div class="checkout-body">
+              <!-- Pricing Breakdown -->
+              <div class="checkout-summary-list">
+                <div class="summary-row total-brut">
+                  <span>Total Vente Public :</span>
+                  <span id="pos-calc-total-public">0,00 €</span>
+                </div>
+                <div class="summary-row coverage-deductions">
+                  <span>Prise en charge Sécu (RO) :</span>
+                  <span id="pos-calc-secu-deduct">- 0,00 €</span>
+                </div>
+                <div class="summary-row mutuelle-deductions">
+                  <span>Part Mutuelle (RC) :</span>
+                  <span id="pos-calc-mutuelle-deduct">- 0,00 €</span>
+                </div>
+                <div class="summary-row">
+                  <span>Montant TVA cumulé :</span>
+                  <span id="pos-calc-tva">0,00 €</span>
+                </div>
+                <div class="summary-row total-paye">
+                  <span>Reste à payer :</span>
+                  <span class="val" id="pos-calc-final-price">0,00 €</span>
+                </div>
+              </div>
+              
+              <!-- Payment Method Selector -->
+              <div class="payment-methods-title">Mode de Règlement</div>
+              <div class="payment-methods-grid">
+                <button class="btn-payment-method active" data-method="card">
+                  <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  Carte Bancaire
+                </button>
+                <button class="btn-payment-method" data-method="cash">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                  Espèces
+                </button>
+                <button class="btn-payment-method" data-method="check">
+                  <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                  Chèque
+                </button>
+              </div>
+              
+              <!-- Numpad simulation for cash drawer payments -->
+              <div class="payment-methods-title" id="numpad-title" style="display: none;">Saisie Espèces Reçues</div>
+              <div class="numpad-container" id="numpad-wrapper" style="display: none;">
+                <button class="numpad-btn" data-num="7">7</button>
+                <button class="numpad-btn" data-num="8">8</button>
+                <button class="numpad-btn" data-num="9">9</button>
+                <button class="numpad-btn" data-num="4">4</button>
+                <button class="numpad-btn" data-num="5">5</button>
+                <button class="numpad-btn" data-num="6">6</button>
+                <button class="numpad-btn" data-num="1">1</button>
+                <button class="numpad-btn" data-num="2">2</button>
+                <button class="numpad-btn" data-num="3">3</button>
+                <button class="numpad-btn" data-num="0">0</button>
+                <button class="numpad-btn" data-num=".">.</button>
+                <button class="numpad-btn backspace" id="numpad-backspace" data-num="backspace">⌫</button>
+              </div>
+              
+              <!-- Display of entered cash -->
+              <div class="summary-row" style="margin-top: 10px; display: none;" id="cash-change-calculator">
+                <span>Espèces encaissées : <strong id="cash-entered-val">0.00 €</strong></span>
+                <span>Rendu Monnaie : <strong id="cash-change-val" style="color: var(--success);">0.00 €</strong></span>
+              </div>
+            </div>
+            
+            <div class="checkout-footer">
+              <button class="btn-checkout-validate" id="btn-validate-transaction" disabled>
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Enregistrer la Vente (F12)
+              </button>
+              <button class="btn-clear-cart" id="btn-empty-cart">
+                Vider le Panier
+              </button>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- VIEW: GESTION DES STOCKS -->
+      <section class="page-view" id="view-stock">
+        <div class="stock-view-layout">
+          <!-- Left side: vertical filters sidebar -->
+          <aside class="stock-filters-sidebar">
+            <div class="stock-filters-title">Filtres de Stock</div>
+            
+            <div class="inventory-filters-vertical">
+              <button class="btn-filter-vertical active" data-stock-filter="all">
+                <span class="filter-icon">📦</span>
+                <span class="filter-text">Tous les articles</span>
+              </button>
+              <button class="btn-filter-vertical" data-stock-filter="low">
+                <span class="filter-icon">⚠️</span>
+                <span class="filter-text">Stocks Bas</span>
+              </button>
+              <button class="btn-filter-vertical" data-stock-filter="out">
+                <span class="filter-icon">🚨</span>
+                <span class="filter-text">En Rupture</span>
+              </button>
+              <button class="btn-filter-vertical" data-stock-filter="expiring">
+                <span class="filter-icon">📅</span>
+                <span class="filter-text">Périmés (&lt; 3 mois)</span>
+              </button>
+            </div>
+            
+            <div class="stock-sidebar-divider"></div>
+            
+            <div class="stock-sidebar-actions">
+              <button class="btn-load-dataset-vertical" id="btn-load-kaggle-dataset" title="Charger le dataset EMA (60 médicaments réels)">
+                📥 Importer Dataset EMA
+              </button>
+              
+              <button class="btn-load-dataset-vertical" id="btn-open-supplier-modal" style="background: rgba(37, 99, 235, 0.1); border: 1px dashed var(--primary); color: var(--primary); font-weight: 700;" title="Générer une commande de réapprovisionnement automatique">
+                📦 Commande Fournisseur
+              </button>
+              
+              <button class="btn-add-product-vertical" id="btn-open-add-product-modal">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Ajouter Produit
+              </button>
+            </div>
+          </aside>
+          
+          <!-- Right side: table of stocks -->
+          <div class="stock-table-container">
+            <div style="background-color: var(--bg-card); border-radius: var(--border-radius); border: 1px solid var(--border); box-shadow: var(--shadow-sm); overflow-x: auto;">
+              <table class="table-styled" id="stock-items-table">
+                <thead>
+                  <tr>
+                    <th>Code CIP</th>
+                    <th>Désignation</th>
+                    <th>DCI (Molécule)</th>
+                    <th>Stock</th>
+                    <th>Alerte</th>
+                    <th>Prix Public</th>
+                    <th>TVA</th>
+                    <th>Expiration</th>
+                    <th style="text-align: right; width: 100px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-items-body">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PATIENTS & DOSSIERS -->
+      <section class="page-view" id="view-patients">
+        <div class="patients-dashboard">
+          <!-- Left Patients List -->
+          <div class="patients-list-pane">
+            <div class="pane-search-bar">
+              <input type="text" placeholder="Rechercher par nom, prénom ou SS..." class="input-styled" id="patient-pane-search">
+            </div>
+            <div class="patient-cards-container" id="patient-cards-container">
+              <!-- Rendered Dynamically -->
+            </div>
+          </div>
+          
+          <!-- Right Patient Details -->
+          <div class="patient-details-pane" id="patient-details-pane">
+            <div class="details-placeholder" id="patient-details-placeholder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <p>Sélectionnez un patient dans la liste pour consulter sa fiche détaillée.</p>
+            </div>
+            
+            <div class="details-content-wrapper" id="patient-details-content" style="display: none;">
+              <!-- Header info -->
+              <div class="details-header">
+                <!-- Back Button for Mobile Master-Detail view -->
+                <button class="btn-back-to-list" id="btn-back-to-patients-list" title="Retour à la liste des patients">
+                  ← Retour
+                </button>
+                <div class="details-user-profile">
+                  <div class="details-avatar-large" id="det-patient-avatar">JD</div>
+                  <div class="details-user-meta">
+                    <span class="details-user-name" id="det-patient-name">Jean Dupont</span>
+                    <span class="details-user-secu" id="det-patient-secu">1 85 02 75 125 456 22</span>
+                  </div>
+                </div>
+                <button class="btn-checkout-validate" id="btn-load-patient-to-pos" style="padding: 10px 16px; font-size: 0.85rem; width: auto;">
+                  Ouvrir en Caisse
+                </button>
+              </div>
+              
+              <!-- Body details -->
+              <div class="details-body">
+                <!-- Info administratrive -->
+                <div class="details-section-box">
+                  <h4>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    Informations Administratives
+                  </h4>
+                  <div class="meta-grid">
+                    <div class="meta-item">
+                      <span class="meta-item-label">Date de Naissance</span>
+                      <span class="meta-item-val" id="det-patient-dob">12/02/1985 (41 ans)</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-item-label">Régime Sécurité Sociale</span>
+                      <span class="meta-item-val" id="det-patient-regime">Général (CPAM Paris)</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-item-label">Taux Remboursement</span>
+                      <span class="meta-item-val" id="det-patient-remb-rate">65% (Tiers payant activé)</span>
+                    </div>
+                    <div class="meta-item">
+                      <span class="meta-item-label">Mutuelle complémentaire</span>
+                      <span class="meta-item-val" id="det-patient-mutuelle">MGEN (100% Ticket Modérateur)</span>
+                    </div>
+                    <div class="meta-item" style="grid-column: span 2;">
+                      <span class="meta-item-label">Médecin Traitant Prescripteur</span>
+                      <span class="meta-item-val" id="det-patient-doctor">Dr. Jean-Pierre Laroche (RPPS: 10001234567)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Allergies & Sécurité thérapeutique -->
+                <div class="details-section-box" style="border-left-color: var(--danger); background: rgba(244, 63, 94, 0.02);">
+                  <h4 style="color: var(--danger);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Alerte Allergies & Risques
+                  </h4>
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;" id="det-patient-allergies">
+                    <!-- JS populated badges -->
+                  </div>
+                </div>
+                
+                <!-- Historique Ordonnances / Achats -->
+                <div class="details-section-box">
+                  <h4>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Historique des Médicaments Délivrés
+                  </h4>
+                  <div class="patient-history-timeline" id="patient-delivery-history-container">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+
+  <!-- MODAL: AJOUTER / MODIFIER PRODUIT -->
+  <div class="modal-overlay" id="product-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="product-modal-title">Nouveau Médicament</h3>
+        <button class="btn-close-modal" id="btn-close-product-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="product-form">
+        <div class="modal-body">
+          <input type="hidden" id="edit-prod-index">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="prod-cip">Code CIP (13 chiffres)</label>
+              <input type="text" id="prod-cip" placeholder="3400930000000" maxlength="13" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-name">Nom Commercial (Désignation)</label>
+              <input type="text" id="prod-name" placeholder="Doliprane 1g" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-dci">DCI (Substance Active)</label>
+              <input type="text" id="prod-dci" placeholder="Paracétamol" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-stock">Stock Initial</label>
+              <input type="number" id="prod-stock" min="0" value="10" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-alert">Seuil d'Alerte</label>
+              <input type="number" id="prod-alert" min="0" value="5" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-price-achat">Prix d'Achat (€)</label>
+              <input type="number" id="prod-price-achat" min="0" step="0.01" placeholder="1.20" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-price-public">Prix Public (€)</label>
+              <input type="number" id="prod-price-public" min="0" step="0.01" placeholder="2.10" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-tva">Taux TVA</label>
+              <select id="prod-tva">
+                <option value="2.1">2.1% (Médicament Remboursable)</option>
+                <option value="10">10.0% (Médicament non-remboursable / OTC)</option>
+                <option value="20">20.0% (Produits Para-pharmaceutiques)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prod-expiration">Date de Péremption</label>
+              <input type="date" id="prod-expiration" required>
+            </div>
+            <div class="form-group">
+              <label for="prod-list">Catégorie Ordonnance</label>
+              <select id="prod-list">
+                <option value="Hors liste">Hors liste (Vente Libre)</option>
+                <option value="Liste I">Liste I (Cadre Rouge - Ordonnance obligatoire)</option>
+                <option value="Liste II">Liste II (Cadre Vert - Ordonnance renouvelable)</option>
+                <option value="Stupéfiant">Stupéfiant (Ordonnance sécurisée)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="btn-cancel-product-modal">Annuler</button>
+          <button type="submit" class="btn-submit">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: RECETTE / FACTURE DE TICKET DE CAISSE (TICKET THERMIQUE) -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="modal-card" style="width: 370px;">
+      <div class="modal-header">
+        <h3>Ticket de Caisse Virtuel</h3>
+        <button class="btn-close-modal" id="btn-close-receipt-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 16px;">
+        <div class="receipt-paper-wrapper">
+          <div class="receipt-paper" id="receipt-thermal-paper">
+            <!-- Simulated paper receipt populated by JS -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding: 12px 16px; background-color: var(--bg-input);">
+        <button class="btn-cancel" style="flex-grow: 1;" id="btn-print-receipt">
+          🖨️ Imprimer Reçu
+        </button>
+        <button class="btn-submit" style="flex-grow: 1;" id="btn-new-sale">
+          Nouvelle Vente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SCANNER D'ORDONNANCE NUMÉRIQUE -->
+  <div class="modal-overlay" id="prescription-modal">
+    <div class="modal-card" style="width: 500px;">
+      <div class="modal-header">
+        <h3>Scanner d'Ordonnance Numérique</h3>
+        <button class="btn-close-modal" id="btn-close-prescription-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Sélectionnez une ordonnance numérisée (e-prescription QR code) à importer :</p>
+        <div style="display: flex; flex-direction: column; gap: 10px;" id="prescription-list-container">
+          <!-- JS populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: COMMANDE FOURNISSEUR -->
+  <div class="modal-overlay" id="supplier-modal">
+    <div class="modal-card" style="width: 600px;">
+      <div class="modal-header">
+        <h3>📦 Commande de Réapprovisionnement Laboratoire</h3>
+        <button class="btn-close-modal" id="btn-close-supplier-modal">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="padding: 20px;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Les produits suivants sont en rupture de stock ou sous le seuil d'alerte critique. Ils vont être commandés auprès de notre répartiteur (OCP) :</p>
+        <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+          <table class="table-styled" style="width: 100%; font-size: 0.8rem;">
+            <thead>
+              <tr>
+                <th>Médicament</th>
+                <th>En Stock</th>
+                <th>Seuil</th>
+                <th>Quantité Commandée</th>
+              </tr>
+            </thead>
+            <tbody id="supplier-order-items-body">
+              <!-- JS populated -->
+            </tbody>
+          </table>
+        </div>
+        <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
+          <span>Total produits à commander : <strong id="supplier-order-total-count" style="color: var(--text-main);">0</strong></span>
+          <span>Estimation Livraison : <strong style="color: var(--success);">Ce soir (19h00)</strong></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btn-cancel-supplier-modal">Fermer</button>
+        <button class="btn-submit" id="btn-submit-supplier-order" style="background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; padding: 10px 20px; border-radius: 99px; font-weight: 600; color: #fff; cursor: pointer;">Envoyer la Commande</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Messages Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- BOTTOM NAVIGATION FOR MOBILE -->
+  <nav class="bottom-nav" id="bottom-navigation-bar">
+    <button class="bottom-nav-item active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      <span>Accueil</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="pos">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span>Caisse</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="stock">
+      <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <span>Stocks</span>
+    </button>
+    <button class="bottom-nav-item" data-tab="patients">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Patients</span>
+    </button>
+  </nav>
+
+  <!-- JavaScript Logics with cache-busting version -->
+  <script src="app.js?v=4"></script>
+</body>
+</html>

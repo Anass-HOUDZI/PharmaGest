@@ -1,0 +1,21 @@
+{
+  "name": "pharmacy-pos",
+  "version": "1.0.0",
+  "description": "Système de Gestion de Pharmacie et Point de Vente (POS)",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite --port 3000 --open"
+  },
+  "keywords": [
+    "pharmacy",
+    "pos",
+    "lgo",
+    "vitale",
+    "tiers-payant"
+  ],
+  "author": "Anass HOUDZI",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
